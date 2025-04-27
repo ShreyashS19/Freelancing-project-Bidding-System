@@ -14,8 +14,8 @@ export interface Project {
   budget: number;
   clientId: string;
   freelancerId?: string;
-  description: string;
-  createdAt: string;
+  description?: string;
+  createdAt?: string;
 }
 
 export interface DashboardSummary {

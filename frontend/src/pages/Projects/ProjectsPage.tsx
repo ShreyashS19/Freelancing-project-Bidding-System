@@ -1,45 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Project } from '../../types';
 import { FileText, Clock, CheckCircle, XCircle, Edit, Trash2 } from 'lucide-react';
 import Button from '../../components/ui/Button';
 import { format } from 'date-fns';
-
-const sampleProjects: Project[] = [
-  {
-    id: '1',
-    name: 'Website Redesign',
-    status: 'in-progress',
-    dueDate: '2025-07-15',
-    budget: 2500,
-    clientId: 'client-1',
-    freelancerId: 'freelancer-1',
-    description: 'Redesign company website with modern UI/UX',
-    createdAt: '2025-05-01',
-  },
-  {
-    id: '2',
-    name: 'Mobile App Development',
-    status: 'not-started',
-    dueDate: '2025-09-30',
-    budget: 8000,
-    clientId: 'client-1',
-    description: 'Create a mobile app for our product',
-    createdAt: '2025-05-05',
-  },
-  {
-    id: '3',
-    name: 'Logo Design',
-    status: 'completed',
-    dueDate: '2025-04-15',
-    budget: 500,
-    clientId: 'client-1',
-    freelancerId: 'freelancer-2',
-    description: 'Design a new logo for company rebrand',
-    createdAt: '2025-03-20',
-  },
-];
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const ProjectsPage: React.FC = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [filter, setFilter] = useState<string>('all'); // Tracks active filter
+  const clientId = 'client-1'; // Hardcoded for demo; replace with auth user ID
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/projects/client/${clientId}`);
+        setProjects(response.data);
+      } catch (error) {
+        toast.error('Failed to fetch projects');
+        console.error('Fetch projects error:', error);
+      }
+    };
+
+    fetchProjects();
+  }, [clientId]);
+
+  // Filter projects based on active filter
+  const filteredProjects = projects.filter((project) => {
+    if (filter === 'all') return true;
+    return project.status === filter;
+  });
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'not-started':
@@ -101,16 +92,38 @@ const ProjectsPage: React.FC = () => {
       {/* Filters */}
       <div className="bg-white p-4 rounded-lg shadow-md">
         <div className="flex flex-wrap gap-3">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="border-blue-200 bg-blue-50 text-blue-700"
+          <Button
+            variant="outline"
+            size="sm"
+            className={filter === 'all' ? 'border-blue-200 bg-blue-50 text-blue-700' : ''}
+            onClick={() => setFilter('all')}
           >
             All Projects
           </Button>
-          <Button variant="outline" size="sm">In Progress</Button>
-          <Button variant="outline" size="sm">Not Started</Button>
-          <Button variant="outline" size="sm">Completed</Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className={filter === 'in-progress' ? 'border-blue-200 bg-blue-50 text-blue-700' : ''}
+            onClick={() => setFilter('in-progress')}
+          >
+            In Progress
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className={filter === 'not-started' ? 'border-blue-200 bg-blue-50 text-blue-700' : ''}
+            onClick={() => setFilter('not-started')}
+          >
+            Not Started
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className={filter === 'completed' ? 'border-blue-200 bg-blue-50 text-blue-700' : ''}
+            onClick={() => setFilter('completed')}
+          >
+            Completed
+          </Button>
         </div>
       </div>
 
@@ -141,7 +154,7 @@ const ProjectsPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {sampleProjects.map((project) => (
+              {filteredProjects.map((project) => (
                 <tr key={project.id} className="hover:bg-gray-50 transition-colors duration-150">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">{project.name}</div>

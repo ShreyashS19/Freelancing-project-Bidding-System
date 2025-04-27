@@ -8,6 +8,7 @@ import ProjectsPage from './pages/Projects/ProjectsPage';
 import { mockClients, mockFreelancers } from './data/mockData';
 import { User } from './types';
 import { Toaster } from 'react-hot-toast';
+import ClientDashboard from './pages/Dashboard/ClientDashboard';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

@@ -1,7 +1,8 @@
 import React from 'react';
-import { format } from 'date-fns';
+import Card from '../ui/Card';
 import Button from '../ui/Button';
 import { Project } from '../../types';
+import { format } from 'date-fns';
 
 interface JobOffersListProps {
   offers: Project[];
@@ -11,55 +12,41 @@ interface JobOffersListProps {
 
 const JobOffersList: React.FC<JobOffersListProps> = ({ offers, onAccept, onDecline }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-800">New Job Offers</h2>
-      </div>
-      
-      <div className="divide-y divide-gray-200">
-        {offers.length === 0 ? (
-          <div className="p-6 text-center text-gray-500">
-            No new job offers available.
-          </div>
-        ) : (
-          offers.map((job) => (
-            <div key={job.id} className="p-6 hover:bg-gray-50 transition-colors duration-150">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="text-lg font-medium text-gray-900">{job.name}</h3>
-                  <p className="text-sm text-gray-600">from Client</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-lg font-semibold text-gray-900">${job.budget.toLocaleString()}</p>
-                  <p className="text-sm text-gray-500">
-                    Due: {format(new Date(job.dueDate), 'MMM dd, yyyy')}
-                  </p>
-                </div>
+    <Card>
+      <h2 className="text-lg font-semibold mb-4">New Job Offers</h2>
+      {offers.length === 0 ? (
+        <p className="text-gray-500">No new job offers available.</p>
+      ) : (
+        <div className="space-y-4">
+          {offers.map((offer) => (
+            <div key={offer.id} className="border-b border-gray-200 pb-4 last:border-b-0">
+              <h3 className="text-md font-medium text-gray-800">{offer.name}</h3>
+              <p className="text-sm text-gray-600 mt-1">{offer.description}</p>
+              <div className="mt-2 text-sm text-gray-500">
+                <p>Budget: ${offer.budget.toLocaleString()}</p>
+                <p>Due: {format(new Date(offer.dueDate), 'MMM dd, yyyy')}</p>
               </div>
-              
-              <p className="text-gray-600 mb-4">{job.description}</p>
-              
-              <div className="flex gap-3">
+              <div className="mt-3 flex space-x-2">
                 <Button
                   variant="success"
                   size="sm"
-                  onClick={() => onAccept(job.id)}
+                  onClick={() => onAccept(offer.id)}
                 >
-                  Accept Offer
+                  Accept
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="danger"
                   size="sm"
-                  onClick={() => onDecline(job.id)}
+                  onClick={() => onDecline(offer.id)}
                 >
                   Decline
                 </Button>
               </div>
             </div>
-          ))
-        )}
-      </div>
-    </div>
+          ))}
+        </div>
+      )}
+    </Card>
   );
 };
 
