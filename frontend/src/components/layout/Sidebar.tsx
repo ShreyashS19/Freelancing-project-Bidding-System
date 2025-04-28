@@ -9,8 +9,10 @@ import {
   MessageSquare, 
   BarChart3, 
   FileEdit, 
-  Settings 
+  Settings,
+  User
 } from 'lucide-react';
+import { useAuth } from '../../hooks/useAuth';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -19,6 +21,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
+  const { user } = useAuth();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -39,6 +42,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     { title: 'Messages', path: '/messages', icon: <MessageSquare size={20} /> },
     { title: 'Reports', path: '/reports', icon: <BarChart3 size={20} /> },
     { title: 'Post a Job', path: '/post-job', icon: <FileEdit size={20} /> },
+    ...(user?.role === 'freelancer' ? [
+      { title: 'Profile', path: '/profile', icon: <User size={20} /> },
+    ] : []),
     { title: 'Settings', path: '/settings', icon: <Settings size={20} /> },
   ];
 
@@ -50,15 +56,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
 
   return (
     <>
-      {/* Overlay for mobile */}
       {isOpen && isMobile && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-20"
           onClick={toggleSidebar}
         />
       )}
-
-      {/* Sidebar */}
       <div 
         className={`fixed top-0 left-0 h-full bg-gray-900 text-white transition-all duration-300 ease-in-out z-30 ${
           isOpen ? 'w-64' : 'w-0 md:w-16'
@@ -72,7 +75,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-
         <nav className="mt-8">
           <ul>
             {menuItems.map((item, index) => (

@@ -75,15 +75,15 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
           onClick={() => setProfileOpen(!profileOpen)}
         >
           <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-            {user.avatar ? (
+            {user?.avatar ? (
               <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
             ) : (
               <User size={20} className="text-gray-600" />
             )}
           </div>
           <div className="hidden md:block text-left">
-            <p className="text-sm font-medium text-gray-700">{user.name}</p>
-            <p className="text-xs text-gray-500 capitalize">{user.role}</p>
+            <p className="text-sm font-medium text-gray-700">{user?.name}</p>
+            <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
           </div>
           <ChevronDown size={16} className="text-gray-500" />
         </button>
