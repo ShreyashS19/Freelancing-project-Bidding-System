@@ -1,93 +1,95 @@
-import { User, Project, DashboardSummary, Notification } from '../types';
+import { Project } from '../types/freelancers';
 
-export const mockClients: User[] = [
-  {
-    id: 'client-1',
-    name: 'John Smith',
-    email: 'john@example.com',
-    role: 'client',
-    avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=150',
-  },
+// Generate a list of skills for the mock data
+const skillsList = [
+  'React', 'TypeScript', 'JavaScript', 'HTML', 'CSS', 'Node.js', 
+  'UI/UX Design', 'Python', 'Java', 'C#', 'PHP', 'Ruby', 
+  'AWS', 'Azure', 'Docker', 'GraphQL', 'REST API', 'MongoDB',
+  'PostgreSQL', 'MySQL', 'Redis', 'Flutter', 'React Native',
+  'Swift', 'Kotlin', 'Angular', 'Vue.js', 'WordPress', 'SEO',
+  'Content Writing', 'Digital Marketing', 'Figma', 'Adobe XD',
+  'Photoshop', 'Illustrator', 'Unity', 'Game Development',
+  'Machine Learning', 'Data Science', 'Blockchain', 'DevOps'
 ];
 
-export const mockFreelancers: User[] = [
-  {
-    id: 'freelancer-1',
-    name: 'Alice Johnson',
-    email: 'alice@example.com',
-    role: 'freelancer',
-    avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=150',
-  },
-  {
-    id: 'freelancer-2',
-    name: 'Bob Williams',
-    email: 'bob@example.com',
-    role: 'freelancer',
-    avatar: 'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=150',
-  },
-];
-
-export const mockProjects: Project[] = [
-  {
-    id: '1',
-    name: 'Website Redesign',
-    status: 'in-progress',
-    dueDate: '2025-07-15',
-    budget: 2500,
-    clientId: 'client-1',
-    freelancerId: 'freelancer-1',
-    description: 'Redesign company website with modern UI/UX',
-    createdAt: '2025-05-01',
-  },
-  {
-    id: '2',
-    name: 'Mobile App Development',
-    status: 'not-started',
-    dueDate: '2025-09-30',
-    budget: 8000,
-    clientId: 'client-1',
-    description: 'Create a mobile app for our product',
-    createdAt: '2025-05-05',
-  },
-  {
-    id: '3',
-    name: 'Logo Design',
-    status: 'completed',
-    dueDate: '2025-04-15',
-    budget: 500,
-    clientId: 'client-1',
-    freelancerId: 'freelancer-2',
-    description: 'Design a new logo for company rebrand',
-    createdAt: '2025-03-20',
-  },
-];
-
-export const mockDashboardSummary: DashboardSummary = {
-  totalSpend: 10500,
-  activeProjects: 2,
-  pendingReviews: 0,
+// Generate random date within a range
+const randomDate = (start: Date, end: Date) => {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 };
 
-export const mockNotifications: Notification[] = [
-  {
-    id: '1',
-    message: 'New message from Alice Johnson',
-    read: false,
-    date: '2025-05-10T14:30:00',
-    type: 'info',
-  },
-  {
-    id: '2',
-    message: 'Payment received for Website Redesign',
-    read: false,
-    date: '2025-05-09T10:15:00',
-    type: 'success',
-  },
-  {
-    id: '3',
-    message: 'Project deadline approaching: Mobile App Development',
-    read: true,
-    date: '2025-05-08T09:00:00',
-    type: 'warning',
-  },
+// Format date to ISO string
+const formatDateForMock = (date: Date) => {
+  return date.toISOString().split('T')[0];
+};
+
+// Generate random budget
+const randomBudget = () => {
+  return Math.floor(Math.random() * 15 + 5) * 1000; // $5,000 to $20,000
+};
+
+// Generate random subset of skills
+const randomSkills = () => {
+  const shuffled = [...skillsList].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, Math.floor(Math.random() * 5) + 2); // 2-6 skills
+};
+
+// Generate random applicants
+const applicantNames = [
+  'John Smith', 'Emily Johnson', 'Michael Brown', 'Jessica Davis',
+  'David Wilson', 'Sarah Martinez', 'Robert Taylor', 'Jennifer Anderson',
+  'William Thomas', 'Lisa Jackson', 'Daniel White', 'Margaret Harris',
+  'James Martin', 'Nancy Thompson', 'Charles Garcia', 'Karen Robinson',
+  'Joseph Clark', 'Susan Rodriguez', 'Thomas Lewis', 'Betty Walker'
 ];
+
+const randomApplicants = () => {
+  const shuffled = [...applicantNames].sort(() => 0.5 - Math.random());
+  return shuffled.slice(0, Math.floor(Math.random() * 3) + 1); // 1-3 applicants
+};
+
+// Project names
+const projectNames = [
+  'E-commerce Website Redesign',
+  'Mobile App Development',
+  'Brand Identity Overhaul',
+  'Content Management System',
+  'Digital Marketing Campaign',
+  'SEO Optimization Project',
+  'Custom CRM Implementation',
+  'Data Analytics Dashboard',
+  'Social Media Integration',
+  'Video Production Series',
+  'API Development',
+  'Database Migration',
+  'UI/UX Enhancement',
+  'Cloud Migration Strategy',
+  'Blockchain Implementation',
+  'WordPress Plugin Development',
+  'React Native Mobile App',
+  'Machine Learning Integration',
+  'DevOps Pipeline Setup',
+  'Unity Game Development'
+];
+
+// Generate mock projects
+export const mockProjects: Project[] = Array.from({ length: 20 }, (_, i) => {
+  const now = new Date();
+  const pastDate = new Date();
+  pastDate.setMonth(pastDate.getMonth() - 3);
+  
+  const futureDate = new Date();
+  futureDate.setMonth(futureDate.getMonth() + 3);
+  
+  const dateCreated = randomDate(pastDate, now);
+  const dueDate = randomDate(now, futureDate);
+  
+  return {
+    id: `project-${i + 1}`,
+    projectName: projectNames[i],
+    dateCreated: formatDateForMock(dateCreated),
+    dueDate: formatDateForMock(dueDate),
+    budget: randomBudget(),
+    applicants: randomApplicants(),
+    skills: randomSkills(),
+  };
+});

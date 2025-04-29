@@ -1,18 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bell, User, LogOut, Settings, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { User as UserType } from '../../types';
+import axios from 'axios';
+import { useAuth } from '../../context/AuthContext';
 
 interface HeaderProps {
   user: UserType;
-  onLogout: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
+const Header: React.FC<HeaderProps> = ({ user }) => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
   const notificationsRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const { logout, isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -34,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
     <header className="bg-white shadow-sm py-4 px-6 flex items-center justify-end">
       {/* Notifications */}
       <div className="relative mr-4" ref={notificationsRef}>
-        <button 
+        <button
           className="p-2 rounded-full text-gray-600 hover:bg-gray-100 transition-colors relative"
           onClick={() => setNotificationsOpen(!notificationsOpen)}
         >
@@ -70,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
 
       {/* Profile */}
       <div className="relative" ref={profileRef}>
-        <button 
+        <button
           className="flex items-center space-x-2 focus:outline-none"
           onClick={() => setProfileOpen(!profileOpen)}
         >
@@ -90,19 +93,19 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }) => {
 
         {profileOpen && (
           <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-10 border border-gray-200 animate-fade-in">
-            <Link 
-              to="/settings/profile" 
+            <Link
+              to="/settings/profile"
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
               onClick={() => setProfileOpen(false)}
             >
               <Settings size={16} className="mr-2" />
               Account Settings
             </Link>
-            <button 
+            <button
               className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
               onClick={() => {
                 setProfileOpen(false);
-                onLogout();
+                logout();
               }}
             >
               <LogOut size={16} className="mr-2" />
